@@ -95,15 +95,13 @@ def vsm(idx2term, term_doc_mtx, pb5_vec, pd_vec, word_embb):
 
 def main():
     parser = argparse.ArgumentParser(
-        description = 'Neuman et. 2014 - Baseline (Features)')
+        description = 'VSM - Feature Extraction')
 
     help_msgs = []
     # Input arguments #
     help_msgs.append('corpus_pp path')
     help_msgs.append('predefined vectors path')
     help_msgs.append('word embeddings path')
-    help_msgs.append('split path')
-    help_msgs.append('vocabulary path')
     
     # Output arguments #
     help_msgs.append('features vsm path')
@@ -114,8 +112,6 @@ def main():
     parser.add_argument('corpus_pp_path', help=help_msgs[0])
     parser.add_argument('predefined_vectors_path', help=help_msgs[1])
     parser.add_argument('word_embeddings_path', help=help_msgs[2])
-    parser.add_argument('split_path', help=help_msgs[3])
-    parser.add_argument('vocabulary_path', help=help_msgs[4])
 
     # Output arguments #
     parser.add_argument('--output', action='store', metavar='PATH',
@@ -136,10 +132,6 @@ def main():
     corpus = []
     users = []
     register_dialect('tab', delimiter='\t')
-    
-    # Read the 'official' splits #
-    split_df = pd.read_pickle(join(args.split_path))
-    split_set = set(split_df['user_name'])
 
     filepath = join(args.corpus_pp_path, 'corpus_pp.tsv')
     field_size_limit(sys.maxsize)
@@ -152,19 +144,10 @@ def main():
         for row in r:
             username = row[0]
             content_pp = row[1]
-            if username in split_set:
-                corpus.append(content_pp)
-                users.append(username)
+            corpus.append(content_pp)
+            users.append(username)
 
-    vocabulary_train = {}
-    with open(args.vocabulary_path, 'r') as fp:
-        r = reader(fp, dialect='tab')
-        for row in r:
-            term = row[0]
-            idx = int(row[1])
-            vocabulary_train[term] = idx
-
-    vectorizer = CountVectorizer(vocabulary=vocabulary_train)
+    vectorizer = CountVectorizer()
     # In case you are interested in trying other types other weighting schemes
     # vectorizer = TfidfVectorizer()
 
