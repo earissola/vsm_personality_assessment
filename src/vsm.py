@@ -175,8 +175,7 @@ def main():
     x = vsm(idx2term, term_doc_mtx, pb5_vec, pd_vec, word_embb)
     # Replace nan with zero #
     np.nan_to_num(x, copy=False)
-    suffix = splitext(basename(args.split_path))[0]
-    filepath = join(args.output_path, 'personality_scores_%s' % suffix)
+    filepath = join(args.output_path, 'personality_scores')
     np.save(filepath, x)
 
     filepath = join(args.output_path, 'users_%s.txt' % suffix)
