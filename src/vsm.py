@@ -178,7 +178,7 @@ def main():
     filepath = join(args.output_path, 'personality_scores')
     np.save(filepath, x)
 
-    filepath = join(args.output_path, 'users_%s.txt' % suffix)
+    filepath = join(args.output_path, 'users.txt')
     with open(filepath, 'w') as fp:
         for username in users:
             fp.write('%s\n' % username)
